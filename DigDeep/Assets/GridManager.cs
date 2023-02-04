@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
-using UnityEditor.SearchService;
+using System.IO;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 
 public class GridManager : MonoBehaviour
@@ -9,7 +10,7 @@ public class GridManager : MonoBehaviour
     private const int _rows = 25;
     private const int _cols = 25;
     private const int _tilesize = 1;
-    private Vector3 cameraVector2Int;
+    private Vector3 cameraVector3;
     private ArrayList tiles=null;
     bool inversex = false;
     bool inversey = false;
@@ -17,11 +18,12 @@ public class GridManager : MonoBehaviour
     private int rangexHigh;
     private int rangeyLow;
     private int rangeyHigh;
+    private int testing = 0;
 
     void Start()
     {
         //initialize camera
-        cameraVector2Int=GetCameraPos();
+        cameraVector3=GetCameraPos();
         UpdateRange();
         SwapRange();
         GenerateGrid();
@@ -33,10 +35,10 @@ public class GridManager : MonoBehaviour
     void Update()
     {
         //check if camera has moved, if so update grid
-        Vector3 newposVector2Int = GetCameraPos();
-        if (newposVector2Int != cameraVector2Int)
+        Vector3 newposVector3 = GetCameraPos();
+        if (newposVector3 != cameraVector3)
         {
-            cameraVector2Int = newposVector2Int;
+            cameraVector3 = newposVector3;
             UpdateGrid();
             
         }
@@ -44,6 +46,8 @@ public class GridManager : MonoBehaviour
 
     private void UpdateGrid()
     {
+        testing = testing + 1;
+        Debug.Log("rounds"+testing);
         //make more grid theoretically I want to check if a space has already been generated
         //then what hasn't? or maybe update grid should only generate in front of the camera
         //whatever direction it has moved 
@@ -63,12 +67,15 @@ public class GridManager : MonoBehaviour
        SwapRange();
 
 
-        foreach (GameObject tile in tiles)
+        for(int i=tiles.Count-1; i>=0; i--)
         {
+            GameObject tile = (GameObject)tiles[i];
             //attempt to say that if not in bounds destroy. This doesn't appear to work at all
-            if (tile.transform.position.x < rangexLow || tile.transform.position.x > rangexHigh|| tile.transform.position.y < rangeyLow || tile.transform.position.y > rangeyHigh)
+            if (Math.Abs(rangexLow) > Math.Abs(tile.transform.position.x)||Math.Abs(tile.transform.transform.position.x)>Math.Abs(rangexHigh)|| Math.Abs(rangeyLow) > Math.Abs(tile.transform.position.y) || Math.Abs(tile.transform.transform.position.y) > Math.Abs(rangeyHigh))
             {
+               
                 Destroy(tile);
+              
             }
         }
        
@@ -82,13 +89,13 @@ public class GridManager : MonoBehaviour
         UpdateRange();
         SwapRange();
        
-
+        
         
 
         int posX = rangexLow;
         int posY = rangeyLow;
 
-        for (int row = 0; row<_rows; row++)
+        for (int row = rangexLow; row<rangexHigh; row++)
         {
             posY = (int)(posY + _tilesize);
             posX = rangexLow;
@@ -100,7 +107,7 @@ public class GridManager : MonoBehaviour
                     referenceTile, transform);
                 
                     
-
+                    
                     tile.transform.position = new Vector2(posX, posY);
                     
                     tiles.Add(tile);
@@ -113,7 +120,8 @@ public class GridManager : MonoBehaviour
     }
     private Vector3 GetCameraPos()
     {
-        Vector3 cameraVector3 = Camera.main.transform.position;
+        Vector3 newcameraVector3 = Camera.main.transform.position;
+        
         if (cameraVector3.x < 0)
         {
             inversex = true;
@@ -124,7 +132,7 @@ public class GridManager : MonoBehaviour
             inversey = true;
         }
 
-        return cameraVector3;
+        return newcameraVector3;
     }
 
     //Math is probably sketchy here.
@@ -135,26 +143,30 @@ public class GridManager : MonoBehaviour
     {
         if (inversex)
         {
-            int temp = rangeyHigh;
-            rangexHigh = -rangexLow;
-            rangeyLow = -temp;
+            (rangexHigh, rangexLow) = (rangexLow, rangexHigh);
         }
 
         if (inversey)
         {
-            int temp = rangeyHigh;
-            rangeyHigh = -rangeyLow;
-            rangeyLow = -temp;
+            (rangeyHigh, rangeyLow) = (rangeyLow, rangeyHigh);
         }
     }
 
     private void UpdateRange()
     {
         Vector3 camera = GetCameraPos();
-        rangexLow = (int)(camera.x - _rows * _tilesize / 2);
-        rangexHigh = (int)(camera.x + _rows * _tilesize / 2 + 1);
+        Debug.Log("xcam"+camera.x);
+        Debug.Log("ycam"+camera.y);
 
-        rangeyLow = (int)(camera.y - _cols * _tilesize / 2);
-        rangeyHigh = (int)(camera.y + _cols * _tilesize / 2 + 1);
+        rangexLow = (int)(camera.x - _rows * _tilesize );
+        rangexHigh = (int)(camera.x + _rows * _tilesize);
+
+        rangeyLow = (int)(camera.y - _cols * _tilesize);
+        rangeyHigh = (int)(camera.y + _cols * _tilesize);
+
+        Debug.Log("xHigh"+rangexHigh);
+        Debug.Log("xLow"+rangexLow);
+        Debug.Log("yHigh"+rangeyHigh);
+        Debug.Log("yLow"+rangeyLow);
     }
 }
