@@ -1,63 +1,70 @@
-﻿using System;
-using System.Collections;
+﻿
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
-using UnityEngine.Tilemaps;
+using UnityEngine;
+
+
+
 
 namespace Assets
 
 {
 
-    public class GridSystem
+    public class GridSystem : ScriptableObject
     {
-        LinkedList
-        private GridSystem current;
+        private LinkedList<Coordinate> _coords;
+        
 
 
-        private GridSystem()
+        public GridSystem()
         {
             _coords = new LinkedList<Coordinate>();
             
             
         }
 
-        private void start()
-        {
-            getInstance();
-        }
 
-        public GridSystem getInstance()
+        public void AddRow(int x, int y, GameObject tile)
         {
-            if (current == null)
+            
+            
+            if (_coords.Count > 0)
             {
-                this.current= new GridSystem();
-            }
-            return this.current;
-        }
-
-        public void AddRow(int x, int y)
-        {
-            Coordinate c = _coords.Last();
-            if (c.getY == y)
-            {
-                return;
+                Coordinate c = _coords.Last();
+                if (c.GetY() == y)
+                {
+                    return;
+                }
             }
 
             for (int i = x; i < x + 30; i++)
             {
+
+                GameObject tileClone = (GameObject)Instantiate(tile
+                );
                 
-               _c
+                tile.transform.position = new Vector2(i, y);
+                Coordinate toCoordinate = ScriptableObject.CreateInstance<Coordinate>();
+                toCoordinate.setTile(tileClone);
+                toCoordinate.setX(i);
+                toCoordinate.setY(y);
+                _coords.AddLast(toCoordinate);
+            }
+            
+        }
+
+
+        public void RemoveRow(int x, int y)
+        { 
+            while(_coords.First().GetY() == y)
+            {
+                _coords.RemoveFirst();
             }
         }
 
-        public void removeRow(int x, int y)
+        public bool IsEmpty()
         {
-            
-
+            return _coords.Count == 0;
         }
 
     }
