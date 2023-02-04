@@ -20,14 +20,19 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
+        //initialize camera
+        cameraVector2Int=GetCameraPos();
+        UpdateRange();
+        SwapRange();
         GenerateGrid();
         
-        cameraVector2Int =Camera.main.transform.position;
+       
     }
 
     // Update is called once per frame
     void Update()
     {
+        //check if camera has moved, if so update grid
         Vector3 newposVector2Int = GetCameraPos();
         if (newposVector2Int != cameraVector2Int)
         {
@@ -39,7 +44,13 @@ public class GridManager : MonoBehaviour
 
     private void UpdateGrid()
     {
+        //make more grid theoretically I want to check if a space has already been generated
+        //then what hasn't? or maybe update grid should only generate in front of the camera
+        //whatever direction it has moved 
         GenerateGrid();
+        //Whatever's out of bounds should be destroyed in an attempt at memory management
+        //in theory should be constrained also by players possible moves, want to destroy whats above but not necessarily whats beside
+
         DestroyOutOfBounds();
         
         
@@ -47,32 +58,14 @@ public class GridManager : MonoBehaviour
 
     private void DestroyOutOfBounds()
     {
-        GetCameraPos();
        
-       
-       rangexLow = (int)(Camera.main.transform.position.x -_rows*_tilesize / 2);
-       rangexHigh = (int)(Camera.main.transform.position.x +_rows*_tilesize / 2+1);
+       UpdateRange();
+       SwapRange();
 
-        rangeyLow = (int)(Camera.main.transform.position.y- _cols*_tilesize / 2); 
-        rangeyHigh = (int)(Camera.main.transform.position.y + _cols*_tilesize / 2+1);
-
-        if (inversex)
-        {
-            int temp = rangeyHigh;
-            rangexHigh = -rangexLow;
-            rangeyLow = -temp;
-        }
-
-        if (inversey)
-        {
-            int temp = rangeyHigh;
-            rangeyHigh = -rangeyLow;
-            rangeyLow = -temp;
-        }
 
         foreach (GameObject tile in tiles)
         {
-            
+            //attempt to say that if not in bounds destroy. This doesn't appear to work at all
             if (tile.transform.position.x < rangexLow || tile.transform.position.x > rangexHigh|| tile.transform.position.y < rangeyLow || tile.transform.position.y > rangeyHigh)
             {
                 Destroy(tile);
@@ -81,52 +74,20 @@ public class GridManager : MonoBehaviour
        
     }
 
-    private Vector3 GetCameraPos()
-    {
-        Vector3 cameraVector3= Camera.main.transform.position;
-        if (cameraVector3.x < 0)
-        {
-            inversex = true;
-        }
-
-        if (cameraVector3.y < 0)
-        {
-            inversey = true;
-        }
-
-        return cameraVector3;
-    }
-
     private void GenerateGrid()
     {
         tiles = new ArrayList();
-        int posX;
-        int posY;
+        
         GameObject referenceTile = (GameObject)Instantiate(Resources.Load("layer3"));
-        Vector3 camera=GetCameraPos();
+        UpdateRange();
+        SwapRange();
+       
 
-        rangexLow = (int)(camera.x - _rows * _tilesize /2);
-        rangexHigh = (int)(camera.x + _rows * _tilesize /2+1);
+        
 
-        rangeyLow = (int)(camera.y - _cols * _tilesize / 2);
-        rangeyHigh = (int)(camera.y + _cols*_tilesize/2+1);
+        int posX = rangexLow;
+        int posY = rangeyLow;
 
-        if (inversex)
-        {
-            int temp = rangeyHigh;
-            rangexHigh = -rangexLow;
-            rangeyLow = -temp;
-        }
-
-        if (inversey)
-        {
-            int temp = rangeyHigh;
-            rangeyHigh = -rangeyLow;
-            rangeyLow = -temp;
-        }
-
-        posX = rangexLow;
-        posY = rangeyLow;
         for (int row = 0; row<_rows; row++)
         {
             posY = (int)(posY + _tilesize);
@@ -149,5 +110,51 @@ public class GridManager : MonoBehaviour
         }
         Destroy(referenceTile);
         
+    }
+    private Vector3 GetCameraPos()
+    {
+        Vector3 cameraVector3 = Camera.main.transform.position;
+        if (cameraVector3.x < 0)
+        {
+            inversex = true;
+        }
+
+        if (cameraVector3.y < 0)
+        {
+            inversey = true;
+        }
+
+        return cameraVector3;
+    }
+
+    //Math is probably sketchy here.
+    //In theory I'm trying to account for the grid system.
+    //Honestly if i could just move the camera spawn to the bottom right quad
+    //this math would probably be easier
+    private void SwapRange()
+    {
+        if (inversex)
+        {
+            int temp = rangeyHigh;
+            rangexHigh = -rangexLow;
+            rangeyLow = -temp;
+        }
+
+        if (inversey)
+        {
+            int temp = rangeyHigh;
+            rangeyHigh = -rangeyLow;
+            rangeyLow = -temp;
+        }
+    }
+
+    private void UpdateRange()
+    {
+        Vector3 camera = GetCameraPos();
+        rangexLow = (int)(camera.x - _rows * _tilesize / 2);
+        rangexHigh = (int)(camera.x + _rows * _tilesize / 2 + 1);
+
+        rangeyLow = (int)(camera.y - _cols * _tilesize / 2);
+        rangeyHigh = (int)(camera.y + _cols * _tilesize / 2 + 1);
     }
 }
