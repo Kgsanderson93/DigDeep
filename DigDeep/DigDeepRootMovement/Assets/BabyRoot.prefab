@@ -105,6 +105,7 @@ MonoBehaviour:
   leftDownRoot: {fileID: 1452208612376427829, guid: 9b02f695377470b488addf8e748b7d44, type: 3}
   downRightRoot: {fileID: 1452208612376427829, guid: 9a5b055126758f94683768eab5374765, type: 3}
   sidewaysRootFull: {fileID: 1452208612376427829, guid: 0f51620595f43bc4b95d005f43eab56d, type: 3}
+  waterBar: {fileID: 0}
 --- !u!65 &3944671957593270492
 BoxCollider:
   m_ObjectHideFlags: 0

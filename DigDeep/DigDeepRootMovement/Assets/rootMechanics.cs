@@ -10,6 +10,7 @@ public class rootMechanics : MonoBehaviour
     private Vector2 previousRootDirection = Vector2.down;
     private Transform position;
     private bool babyRootFlip = true;
+    public WaterBar waterBar;
 
     private static SpriteRenderer spriteRendererForRoot;
 
@@ -144,12 +145,54 @@ public class rootMechanics : MonoBehaviour
         {
             return true;
         }
+        
         //here is a great place to stop the player from moving past a desired x bounds (on either side) by returning true
-        // if (currentXcoordinant >= farXBoundary || currentXcoordinant <= closeXBoundary)
+        // if (this.position.x >= farXBoundary || this.position.x <= closeXBoundary)
         // {
         //     return true;
         // }
         return false;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("water")) {
+           
+            Debug.Log("player is hitting water, intended design heals player health");
+            //do things
+            waterBar.heal();
+            return;
+        }
+        else if (other.gameObject.CompareTag("fertilizer")) {
+           
+            Debug.Log("player is hitting fertilizer, intended design heals player health by one and increases max capcity");
+            //do things
+            waterBar.increaseMax();
+            return;
+        }
+        else if (other.gameObject.CompareTag("Rock1")) {
+           
+            Debug.Log("player is hitting top layer soil (layer Rock1)");
+            //do things
+            waterBar.takeDamage();
+            return;
+        }
+        else if (other.gameObject.CompareTag("Rock2")) {
+            
+            Debug.Log("player is hitting medium layer soil (layer Rock2)");
+            //do things
+            waterBar.takeDamage();
+            return;
+        }
+        else if (other.gameObject.CompareTag("Rock3")) {
+            
+            Debug.Log("player is hitting bottom layer soil (layer Rock3)");
+            //do things
+            waterBar.takeDamage();
+            return;
+        }
+
     }
 
 }
