@@ -15,16 +15,14 @@ public class rootMechanics : MonoBehaviour
 
 
     // Start is called before the first frame update
-    private void Start()
+    void Start()
     {
-       
         spriteRendererForRoot = gameObject.GetComponent<SpriteRenderer>();
-        position = babyRoot.transform;
+        //position = babyRoot.transform;
     }
 
     void Update()
     {
-        
 
         if (Input.GetKeyDown(KeyCode.D))
         {

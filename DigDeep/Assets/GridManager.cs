@@ -1,117 +1,172 @@
 using System;
+using System.Collections;
+using System.IO;
 using UnityEngine;
 
-namespace Assets
+
+
+public class GridManager : MonoBehaviour
 {
-    public class GridManager : MonoBehaviour
+    private const int _rows = 25;
+    private const int _cols = 25;
+    private const int _tilesize = 1;
+    private Vector3 cameraVector3;
+    private ArrayList tiles=null;
+    bool inversex = false;
+    bool inversey = false;
+    private int rangexLow;
+    private int rangexHigh;
+    private int rangeyLow;
+    private int rangeyHigh;
+    private int testing = 0;
+
+    void Start()
     {
-        private const int Rows = 30;
-        private const int Cols = 30;
-        private int rowCount;
-        private static GridSystem _current;
-        private Vector3 _cameraVector3;
+        //initialize camera
+        cameraVector3=GetCameraPos();
+        UpdateRange();
+        SwapRange();
+        GenerateGrid();
+        
+       
+    }
 
-        private int _rangexLow;
-        private int _rangeyHigh;
-        private int _rangeyLow;
-        private GameObject referenceTile;
-        private GameObject referenceTileFirst;
-        private GameObject referenceTileSecond;
-        private GameObject referenceTileThird;
-
-        private float ysincelastupdate;
-
-        private void Start()
+    // Update is called once per frame
+    void Update()
+    {
+        //check if camera has moved, if so update grid
+        Vector3 newposVector3 = GetCameraPos();
+        if (newposVector3 != cameraVector3)
         {
-            referenceTileThird = (GameObject)Instantiate(Resources.Load("layer3"));
-            referenceTileFirst = (GameObject)Instantiate(Resources.Load("layer1"));
-            referenceTileSecond = (GameObject)Instantiate(Resources.Load("layer2"));
-            UpdateTile();
-            _cameraVector3 = Camera.main.transform.position;
-            Debug.Log(_cameraVector3.x);
-            _current = ScriptableObject.CreateInstance<GridSystem>();
-            _rangexLow = (int)_cameraVector3.x - Rows / 2;
-            _rangeyLow = (int)_cameraVector3.y - Cols / 2;
-            _rangeyHigh = (int)_cameraVector3.y + Cols / 2;
-            GenerateGrid();
-            ysincelastupdate = 0;
-
-           
+            cameraVector3 = newposVector3;
+            UpdateGrid();
+            
         }
+    }
 
-        // Update is called once per frame
-        private void Update()
+    private void UpdateGrid()
+    {
+        testing = testing + 1;
+        Debug.Log("rounds"+testing);
+        //make more grid theoretically I want to check if a space has already been generated
+        //then what hasn't? or maybe update grid should only generate in front of the camera
+        //whatever direction it has moved 
+        GenerateGrid();
+        //Whatever's out of bounds should be destroyed in an attempt at memory management
+        //in theory should be constrained also by players possible moves, want to destroy whats above but not necessarily whats beside
+
+        DestroyOutOfBounds();
+        
+        
+    }
+
+    private void DestroyOutOfBounds()
+    {
+       
+       UpdateRange();
+       SwapRange();
+
+
+        for(int i=tiles.Count-1; i>=0; i--)
         {
-            Debug.Log("update" + rowCount);
-            
-            float camVar = Math.Abs(_cameraVector3.y - Camera.main.transform.position.y);
-            ysincelastupdate = ysincelastupdate + camVar;
-            Debug.Log("Cam"+camVar);
-            Debug.Log("update" + ysincelastupdate);
-            
-            if (ysincelastupdate > 1)
+            GameObject tile = (GameObject)tiles[i];
+            //attempt to say that if not in bounds destroy. This doesn't appear to work at all
+            if (Math.Abs(rangexLow) > Math.Abs(tile.transform.position.x)||Math.Abs(tile.transform.transform.position.x)>Math.Abs(rangexHigh)|| Math.Abs(rangeyLow) > Math.Abs(tile.transform.position.y) || Math.Abs(tile.transform.transform.position.y) > Math.Abs(rangeyHigh))
             {
-                for (int i = (int)ysincelastupdate; i > 0; i--)
-                {
-                    UpdateTile();
-                    UpdateGrid();
-                    ysincelastupdate--;
-                }
+               
+                Destroy(tile);
+              
+            }
+        }
+       
+    }
+
+    private void GenerateGrid()
+    {
+        tiles = new ArrayList();
+        
+        GameObject referenceTile = (GameObject)Instantiate(Resources.Load("layer3"));
+        UpdateRange();
+        SwapRange();
+       
+        
+        
+
+        int posX = rangexLow;
+        int posY = rangeyLow;
+
+        for (int row = rangexLow; row<rangexHigh; row++)
+        {
+            posY = (int)(posY + _tilesize);
+            posX = rangexLow;
+            for (int col = rangeyLow; col < rangeyHigh; col++)
+            {
+                posX= (int)(posX + _tilesize);
                 
-            }
-            _cameraVector3 = Camera.main.transform.position;
-        }
-
-        private void UpdateGrid()
-        {
-            Debug.Log("updateGrid"+rowCount);
-            UpdateTile();
-            _current.AddRow(_rangexLow, _rangeyLow--,referenceTile);
-            rowCount++;
-
-            DestroyOutOfBounds();
-        }
-
-        private void DestroyOutOfBounds()
-        {
-            _current.RemoveRow(_rangexLow, _rangeyHigh);
-            _rangeyHigh--;
-        }
-
-        private void GenerateGrid()
-        {
-            int row;
-            if (_current.IsEmpty())
-            {
-                for (row = _rangeyHigh; row >= _rangeyLow; row--)
-                {
-                    _current.AddRow(_rangexLow, row,referenceTile);
-                    rowCount++;
-                    UpdateTile();
+                GameObject tile = (GameObject)Instantiate(
+                    referenceTile, transform);
+                
                     
-                }
-
-                _rangeyLow = row;
+                    
+                    tile.transform.position = new Vector2(posX, posY);
+                    
+                    tiles.Add(tile);
+               
             }
 
-            
         }
-
-        private void UpdateTile()
+        Destroy(referenceTile);
+        
+    }
+    private Vector3 GetCameraPos()
+    {
+        Vector3 newcameraVector3 = Camera.main.transform.position;
+        
+        if (cameraVector3.x < 0)
         {
-            if (rowCount <= 20)
-            {
-                referenceTile = referenceTileFirst;
-                return;
-            }
-            else if (rowCount>20 && rowCount <= 40)
-            {
-                referenceTile = referenceTileSecond;
-                return;
-            }
-            
-                referenceTile = referenceTileThird;
-            
+            inversex = true;
         }
+
+        if (cameraVector3.y < 0)
+        {
+            inversey = true;
+        }
+
+        return newcameraVector3;
+    }
+
+    //Math is probably sketchy here.
+    //In theory I'm trying to account for the grid system.
+    //Honestly if i could just move the camera spawn to the bottom right quad
+    //this math would probably be easier
+    private void SwapRange()
+    {
+        if (inversex)
+        {
+            (rangexHigh, rangexLow) = (rangexLow, rangexHigh);
+        }
+
+        if (inversey)
+        {
+            (rangeyHigh, rangeyLow) = (rangeyLow, rangeyHigh);
+        }
+    }
+
+    private void UpdateRange()
+    {
+        Vector3 camera = GetCameraPos();
+        Debug.Log("xcam"+camera.x);
+        Debug.Log("ycam"+camera.y);
+
+        rangexLow = (int)(camera.x - _rows * _tilesize );
+        rangexHigh = (int)(camera.x + _rows * _tilesize);
+
+        rangeyLow = (int)(camera.y - _cols * _tilesize);
+        rangeyHigh = (int)(camera.y + _cols * _tilesize);
+
+        Debug.Log("xHigh"+rangexHigh);
+        Debug.Log("xLow"+rangexLow);
+        Debug.Log("yHigh"+rangeyHigh);
+        Debug.Log("yLow"+rangeyLow);
     }
 }
