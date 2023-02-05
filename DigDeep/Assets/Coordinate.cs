@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 
@@ -12,38 +7,64 @@ namespace Assets
 {
 
 
-    public class Coordinate
+    public class Coordinate :ScriptableObject
 
      {
     private int x;
     private int y;
-    bool layerOccupy;
-    bool itemoOccupy;
-    private GameObject itemtohold;
+    bool _itemoOccupy;
+    private GameObject _itemtohold;
+    private GameObject _tile;
 
-    public Coordinate(int x, int y)
+    public Coordinate()
+    {
+    }
+
+    public void setX(int x)
     {
         this.x = x;
-        this.y = y;
-        this.layerOccupy = true;
-
     }
 
-    public void giveItem(GameObject item)
+    public void setY(int y)
     {
-        layerOccupy = true;
-        itemtohold = item;
+        this.y = y;
     }
 
-    public int getX()
+    public void setTile(GameObject tile)
+    {
+        this._tile=tile;
+    }
+
+    public void GiveItem(GameObject item)
+    {
+        _itemoOccupy = true;
+        _itemtohold = item;
+    }
+
+    public GameObject GetItem()
+    {
+        return _itemtohold;
+    }
+
+    public int GetX()
     {
         return x;
     }
 
-    public int getY()
+    public int GetY()
     {
         return y;
         
+    }
+
+    public GameObject GetTile()
+    {
+        return _tile;
+    }
+
+    public bool ReturnEmpty()
+    {
+        return this._itemoOccupy;
     }
     }
 }
