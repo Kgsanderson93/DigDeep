@@ -9,7 +9,7 @@ public class WaterBar : MonoBehaviour
     [SerializeField] private GameObject fullDrop, emptyDrop, canvasReference;
     private int startingHealth = 6;
     private int totalHealth = 12;
-    [SerializeField] private Image fullSprite, emptySprite;
+    //[SerializeField] private Image fullSprite, emptySprite;
     private Image[] imageComponents;
     private GameObject[] rainDropsArray, emptyRainDropsArray;
     private int currentHealth;
