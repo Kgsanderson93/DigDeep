@@ -4,7 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Enemy
+  - BigWaterLeft
+  - BigWaterRight
+  - MedWater
+  - Rock
+  - Fertilizer
+  - SmallWater
   layers:
   - Default
   - TransparentFX
@@ -42,11 +47,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Level
+    uniqueID: 2344118779
+    locked: 0
   - name: Water
     uniqueID: 2116099231
     locked: 0
-  - name: Level
-    uniqueID: 2344118779
+  - name: SpawnedObject
+    uniqueID: 2637147257
     locked: 0
   - name: Front
     uniqueID: 3405993979
