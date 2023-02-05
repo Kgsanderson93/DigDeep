@@ -12,7 +12,7 @@ public class CameraFollowScript : MonoBehaviour
     private float cameraRatio;
     private Camera mainCam;
     private Vector3 smoothPos;
-    public float smoothSpeed = 0.5f;
+    [SerializeField] private float smoothSpeed;
     private GameObject player;
     //private Transform playerPos;
 
