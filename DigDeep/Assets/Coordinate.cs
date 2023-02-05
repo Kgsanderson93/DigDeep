@@ -41,6 +41,11 @@ namespace Assets
         _itemtohold = item;
     }
 
+    public GameObject GetItem()
+    {
+        return _itemtohold;
+    }
+
     public int GetX()
     {
         return x;

@@ -35,6 +35,8 @@ namespace Assets
             _rangeyHigh = (int)_cameraVector3.y + Cols / 2;
             GenerateGrid();
             ysincelastupdate = 0;
+
+           
         }
 
         // Update is called once per frame
@@ -86,6 +88,7 @@ namespace Assets
                     _current.AddRow(_rangexLow, row,referenceTile);
                     rowCount++;
                     UpdateTile();
+                    
                 }
 
                 _rangeyLow = row;
@@ -99,15 +102,16 @@ namespace Assets
             if (rowCount <= 20)
             {
                 referenceTile = referenceTileFirst;
+                return;
             }
             else if (rowCount>20 && rowCount <= 40)
             {
                 referenceTile = referenceTileSecond;
+                return;
             }
-            else
-            {
+            
                 referenceTile = referenceTileThird;
-            }
+            
         }
     }
 }
