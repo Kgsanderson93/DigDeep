@@ -239,9 +239,7 @@ MonoBehaviour:
   fullDrop: {fileID: 7063954194864943066, guid: 600fda8b73929be4a936564b0342d058, type: 3}
   emptyDrop: {fileID: 7063954194864943066, guid: faebda19fed83c04e92de3b3970d2cf8, type: 3}
   canvasReference: {fileID: 93543732}
-  fullSprite: {fileID: 21300000, guid: 38b5d43e4addb82488ab55240a8f5753, type: 3}
-  emptySprite: {fileID: 21300000, guid: abed1283c21c0114d98359c3005e0566, type: 3}
-  startingPosition: {x: -403.42, y: 120, z: 0}
+  startingPosition: {x: -403, y: 125, z: 0}
   dropUIspacingInX: 24
   dropUIspacingInY: 0
 --- !u!1 &355545378
