@@ -51,6 +51,11 @@ namespace Assets
         return y;
         
     }
+
+    public GameObject GetTile()
+    {
+        return _tile;
+    }
     }
 }
 

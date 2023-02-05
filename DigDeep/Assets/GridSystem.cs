@@ -58,6 +58,7 @@ namespace Assets
         { 
             while(_coords.First().GetY() == y)
             {
+                Destroy(_coords.First.Value.GetTile());
                 _coords.RemoveFirst();
             }
         }
