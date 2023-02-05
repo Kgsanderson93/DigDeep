@@ -61,6 +61,11 @@ namespace Assets
     {
         return _tile;
     }
+
+    public bool ReturnEmpty()
+    {
+        return this._itemoOccupy;
+    }
     }
 }
 
