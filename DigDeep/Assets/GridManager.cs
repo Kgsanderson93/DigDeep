@@ -31,7 +31,7 @@ namespace Assets
             Debug.Log(_cameraVector3.x);
             _current = ScriptableObject.CreateInstance<GridSystem>();
             _rangexLow = (int)_cameraVector3.x - Rows / 2;
-            _rangeyLow = (int)_cameraVector3.y - Cols / 2;
+            _rangeyLow = (int)_cameraVector3.y;
             _rangeyHigh = (int)_cameraVector3.y + Cols / 2;
             GenerateGrid();
             ysincelastupdate = 0;

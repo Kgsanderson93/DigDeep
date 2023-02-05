@@ -14,11 +14,10 @@ namespace Assets
     public class GridSystem : ScriptableObject
     {
         private LinkedList<Coordinate> _coords;
-        [SerializeField] private float waterSpawnChance=0.5f;
-        [SerializeField] private float TimeSinceFloat = 0;
-        [SerializeField] private float success = .75f;
-        [SerializeField] private float anotherSquare=.1f;
-        [SerializeField] private int spawnBig = 3;
+       
+        [SerializeField] private float success = 9f;
+        
+        //[SerializeField] private int spawnBig = 2;
         [SerializeField] private int spawnMed = 6;
 
 
@@ -61,12 +60,16 @@ namespace Assets
                 //if that doesnt spawn something
                 if (spawnedGameObject==null)
                 {
+                    Debug.Log("tried to spawn obj");
                     spawnedGameObject=SpawnChance(i, y);
                 }
                 //if either spawned give the item to the Coord
                 if (spawnedGameObject != null)
                 {
-                    toCoordinate.GiveItem(spawnedGameObject);
+                    if (y <= 0)
+                    {
+                        toCoordinate.GiveItem(spawnedGameObject);
+                    }
                 }
                 //either way add the coord
                 _coords.AddLast(toCoordinate);
@@ -78,8 +81,8 @@ namespace Assets
         {
             //would like to add more obstacles here but not now :/
 
-            float chance = RandomNumberGenerator.GetInt32(0, 1);
-            if (chance>0) {
+            float chance = RandomNumberGenerator.GetInt32(0, 20);
+            if (chance>2) {
                 GameObject rockGameObject = (GameObject)Instantiate(Resources.Load("Rock"));
                 rockGameObject.AddComponent<BoxCollider2D>();
                 rockGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
@@ -100,23 +103,29 @@ namespace Assets
 
         private GameObject SpawnWater(int x, int y)
         {
+            
             float chance = RandomNumberGenerator.GetInt32(0, 10);
-            if (chance <spawnBig && _coords.Last.Value.ReturnEmpty()&& _coords.Last.Value.GetY()==y)
-            {
-                GameObject leftWaterGameObject = (GameObject)Instantiate(Resources.Load("LeftBigWater"));
-                leftWaterGameObject.transform.position=new Vector2(x-1,y);
-                leftWaterGameObject.AddComponent<BoxCollider2D>();
-                leftWaterGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
-                leftWaterGameObject.tag = "BigWater";
-                _coords.Last.Value.GiveItem(leftWaterGameObject);
-                GameObject rightWaterGameObject = (GameObject)Instantiate(Resources.Load("RightBigWater"));
-                rightWaterGameObject.transform.position = new Vector2(x , y);
-                rightWaterGameObject.AddComponent<BoxCollider2D>();
-                rightWaterGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
-                rightWaterGameObject.tag = "BigWater";
-                return rightWaterGameObject;
-            }
-            else if(chance<spawnMed)
+            
+            //if (_coords.Count>20&& chance <spawnBig && _coords.Last().ReturnEmpty()&& _coords.Last().GetY()==y)
+            //{
+            //    Debug.Log("SpawnBig"+_coords.Last().ReturnEmpty());
+              //  GameObject leftWaterGameObject = (GameObject)Instantiate(Resources.Load("LeftBigWater"));
+                //leftWaterGameObject.transform.position=new Vector2(x-1,y);
+                //leftWaterGameObject.AddComponent<BoxCollider2D>();
+                //leftWaterGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
+                //leftWaterGameObject.tag = "BigWaterLeft";
+
+//                _coords.Last.Value.GiveItem(leftWaterGameObject);
+  //              
+    //            GameObject rightWaterGameObject = (GameObject)Instantiate(Resources.Load("RightBigWater"));
+      //          rightWaterGameObject.transform.position = new Vector2(x , y);
+        //        rightWaterGameObject.AddComponent<BoxCollider2D>();
+          //      rightWaterGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
+            //    rightWaterGameObject.tag = "BigWaterRight";
+
+              //  return rightWaterGameObject;
+            //}
+            if(chance<spawnMed)
             {
                 GameObject medWaterGameObject = (GameObject)Instantiate(Resources.Load("MedWater"));
                 medWaterGameObject.transform.position = new Vector2(x, y);
@@ -131,7 +140,7 @@ namespace Assets
                 smallWaterGameObject.transform.position = new Vector2(x, y);
                 smallWaterGameObject.AddComponent<BoxCollider2D>();
                 smallWaterGameObject.GetComponent<BoxCollider2D>().isTrigger = true;
-                smallWaterGameObject.tag = "smallWater";
+                smallWaterGameObject.tag = "SmallWater";
                 return smallWaterGameObject;
             }
 
@@ -142,17 +151,15 @@ namespace Assets
         private GameObject SpawnWaterChance(int i, int y)
         {
 
-            float chance = RandomNumberGenerator.GetInt32(0, 120);
-            if (chance / 10 > success)
+            float chance = RandomNumberGenerator.GetInt32(0, 100);
+            
+            Debug.Log("chance"+chance);
+            if (chance / 10 > success+.5)
             {
                 return SpawnWater(i,y);
             }
-            TimeSinceFloat = TimeSinceFloat + anotherSquare;
-            if (TimeSinceFloat > 1)
-            {
-                TimeSinceFloat--;
-                return SpawnWater(i,y);
-            }
+            
+            
             return null;
         }
 
@@ -162,17 +169,13 @@ namespace Assets
         private GameObject SpawnChance(int x, int y)
         {
             float chance = RandomNumberGenerator.GetInt32(0, 100);
-            if (chance / 10 > success)
+            Debug.Log("RolledChance" + chance);
+            if (chance/10> success)
             {
                 return SpawnObj(x, y);
             }
 
-            TimeSinceFloat=TimeSinceFloat + anotherSquare;
-            if (TimeSinceFloat > 1)
-            {
-                TimeSinceFloat--;
-                return SpawnObj(x,y);
-            }
+            
             return null;
             
         }
