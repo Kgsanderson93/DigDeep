@@ -1,6 +1,10 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
+using Random = System.Random;
 
 public class rootMechanics : MonoBehaviour
 {
@@ -157,42 +161,69 @@ public class rootMechanics : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
 
-        if (other.gameObject.CompareTag("water")) {
+        if (other.gameObject.CompareTag("Rock1")) {
+           
+            Debug.Log("player is hitting rock, take 3 damage");
+            //do things
+            waterBar.takeDamage();
+            waterBar.takeDamage();
+            waterBar.takeDamage();
+            
+            return;
+        }
+        else if (other.gameObject.CompareTag("water")) {
            
             Debug.Log("player is hitting water, intended design heals player health");
-            //do things
+            //we want to heal to max when hitting water
             waterBar.heal();
             return;
         }
-        else if (other.gameObject.CompareTag("fertilizer")) {
+        else if (other.gameObject.CompareTag("Fertilizer")) {
            
             Debug.Log("player is hitting fertilizer, intended design heals player health by one and increases max capcity");
             //do things
             waterBar.increaseMax();
+            //wait for x amount of seconds then 
+            StartCoroutine(fertilizer());
             return;
         }
         else if (other.gameObject.CompareTag("Rock1")) {
            
-            Debug.Log("player is hitting top layer soil (layer Rock1)");
+            Debug.Log("player is hitting top layer soil (layer Rock1), dealing 0-1 damage");
             //do things
-            waterBar.takeDamage();
+            int chance = RandomNumberGenerator.GetInt32(0, 1);
+            if (chance == 0)
+            {
+                waterBar.takeDamage();
+            }
             return;
         }
         else if (other.gameObject.CompareTag("Rock2")) {
             
-            Debug.Log("player is hitting medium layer soil (layer Rock2)");
+            Debug.Log("player is hitting medium layer soil (layer Rock2), dealing 1 damage");
             //do things
             waterBar.takeDamage();
             return;
         }
         else if (other.gameObject.CompareTag("Rock3")) {
             
-            Debug.Log("player is hitting bottom layer soil (layer Rock3)");
+            Debug.Log("player is hitting bottom layer soil (layer Rock3), dealing 1-2 damage");
             //do things
             waterBar.takeDamage();
+            int chance = RandomNumberGenerator.GetInt32(0, 1);
+            if (chance == 0)
+            {
+                waterBar.takeDamage();
+            }
             return;
         }
 
+    }
+
+    private IEnumerator fertilizer()
+    {
+        yield return new WaitForSeconds(4);
+        waterBar.decreaseMax();
     }
 
 }
