@@ -7,13 +7,13 @@ public class WaterBar : MonoBehaviour
 {
 
     [SerializeField] private GameObject fullDrop, emptyDrop, canvasReference;
-    private int startingHealth = 6;
-    private int totalHealth = 12;
+    public int startingHealth = 6;
+    private static int totalHealth = 12;
     //[SerializeField] private Image fullSprite, emptySprite;
     private Image[] imageComponents;
-    private GameObject[] rainDropsArray, emptyRainDropsArray;
-    private int currentHealth;
-    private int currentHealthCap = 6;
+    private static GameObject[] rainDropsArray, emptyRainDropsArray;
+    public int currentHealth;
+    public int currentHealthCap = 6;
     [SerializeField] private Vector2 startingPosition;
     [SerializeField] private float dropUIspacingInX, dropUIspacingInY;
 
@@ -38,7 +38,7 @@ public class WaterBar : MonoBehaviour
                 
             }
             else{
-                currentHealth++;
+                addHealth();
             }
             
 
@@ -114,7 +114,7 @@ public class WaterBar : MonoBehaviour
     public void takeDamage()
     {
         
-        currentHealth--;
+        
         if (currentHealth <= 0 )
         {
             rainDropsArray[0].SetActive(false); 
@@ -123,6 +123,7 @@ public class WaterBar : MonoBehaviour
             return;
         }
         else{
+            removeHealth();
             rainDropsArray[currentHealth].SetActive(false); 
             emptyRainDropsArray[currentHealth].SetActive(true);
         }
@@ -137,7 +138,7 @@ public class WaterBar : MonoBehaviour
         {
             rainDropsArray[currentHealth].SetActive(true);
             emptyRainDropsArray[currentHealth].SetActive(false);
-            currentHealth++;
+            addHealth();
             return;
             
         }
@@ -198,7 +199,7 @@ public class WaterBar : MonoBehaviour
         {
             emptyRainDropsArray[currentHealthCap - 1].SetActive(false);
             rainDropsArray[currentHealthCap - 1].SetActive(false);
-            currentHealth--;
+            removeHealth();
             currentHealthCap--;
             return;
         }
@@ -207,7 +208,7 @@ public class WaterBar : MonoBehaviour
             //Debug.Log(totalHealth + "totald, " + currentHealth + "current, " + currentHealthCap + " cap");
             emptyRainDropsArray[currentHealthCap - 1].SetActive(false);
             rainDropsArray[currentHealthCap - 1].SetActive(false);
-            currentHealth--;
+            removeHealth();
             currentHealthCap--;
             return;
         }
@@ -224,7 +225,7 @@ public class WaterBar : MonoBehaviour
     }
 
 //this method will be called in player movement when going down not into obstacle
-    public void moveWaterDown()
+    public static void moveWaterDown()
     {
         for (int i = 0; i < totalHealth; i++)
         {
@@ -234,6 +235,41 @@ public class WaterBar : MonoBehaviour
 
 
         }
+    }
+
+    public static void moveWaterRight()
+    {
+        for (int i = 0; i < totalHealth; i++)
+        {
+            //access both arrays and transform the raindrops down
+            rainDropsArray[i].transform.position = rainDropsArray[i].transform.position + new Vector3(1, 0, 0);
+            emptyRainDropsArray[i].transform.position = emptyRainDropsArray[i].transform.position + new Vector3(1, 0, 0);
+
+
+        }
+    }
+
+    public static void moveWaterLeft()
+    {
+        for (int i = 0; i < totalHealth; i++)
+        {
+            //access both arrays and transform the raindrops down
+            rainDropsArray[i].transform.position = rainDropsArray[i].transform.position + new Vector3(-1, 0, 0);
+            emptyRainDropsArray[i].transform.position = emptyRainDropsArray[i].transform.position + new Vector3(-1, 0, 0);
+
+
+        }
+    }
+
+
+    public void addHealth()
+    {
+        currentHealth = currentHealth + 1;
+    }
+
+    public void removeHealth()
+    {
+        currentHealth = currentHealth - 1;
     }
 
 

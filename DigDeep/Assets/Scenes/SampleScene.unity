@@ -452,9 +452,67 @@ MonoBehaviour:
   emptyDrop: {fileID: 240896869060435066, guid: 8955aab4157127149b8d14c2222f5dd1,
     type: 3}
   canvasReference: {fileID: 1613497020}
+  startingHealth: 6
+  currentHealth: 0
+  currentHealthCap: 6
   startingPosition: {x: -7.48, y: -12.6}
   dropUIspacingInX: 0.4
   dropUIspacingInY: 0
+--- !u!1 &1716720032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1716720034}
+  - component: {fileID: 1716720033}
+  m_Layer: 0
+  m_Name: WaterBar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1716720033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716720032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46b26f2911f8474892a4fd277f50b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fullDrop: {fileID: 8846703829183143980, guid: ab0b375540918634686579674cbf7359,
+    type: 3}
+  emptyDrop: {fileID: 240896869060435066, guid: 8955aab4157127149b8d14c2222f5dd1,
+    type: 3}
+  canvasReference: {fileID: 1613497020}
+  startingHealth: 6
+  currentHealth: 0
+  currentHealthCap: 6
+  startingPosition: {x: 0, y: 0}
+  dropUIspacingInX: 0
+  dropUIspacingInY: 0
+--- !u!4 &1716720034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716720032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5052178, y: 5.4525404, z: -0.76009655}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &36393421407264734
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -462,6 +520,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 36393420487271836, guid: 20d3cd8a05a4d204596384f35ed3d87f,
+        type: 3}
+      propertyPath: groundGrid
+      value: 
+      objectReference: {fileID: 129870304}
+    - target: {fileID: 36393420487271836, guid: 20d3cd8a05a4d204596384f35ed3d87f,
+        type: 3}
+      propertyPath: waterBarHolder
+      value: 
+      objectReference: {fileID: 1716720032}
     - target: {fileID: 387201108007075625, guid: 20d3cd8a05a4d204596384f35ed3d87f,
         type: 3}
       propertyPath: m_RootOrder

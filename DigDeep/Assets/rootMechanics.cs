@@ -5,13 +5,15 @@ using UnityEngine;
 public class rootMechanics : MonoBehaviour
 {
 
-    [SerializeField] private GameObject babyRoot, daddyRoot, rightDownRoot, downLeftRoot, leftDownRoot, downRightRoot, sidewaysRootFull;
+    [SerializeField] private GameObject babyRoot, daddyRoot, rightDownRoot, downLeftRoot, leftDownRoot, downRightRoot, sidewaysRootFull, groundGrid, waterBarHolder;
     private Vector2 rootDirection = Vector2.down;
     private Vector2 previousRootDirection = Vector2.down;
     private Transform position;
     private bool babyRootFlip = true;
+    private int distanceLeft, distanceRight, depth;
 
     private static SpriteRenderer spriteRendererForRoot;
+    private GameObject waterMethods;
 
 
     // Start is called before the first frame update
@@ -19,27 +21,67 @@ public class rootMechanics : MonoBehaviour
     {
        
         spriteRendererForRoot = gameObject.GetComponent<SpriteRenderer>();
+        waterMethods =  waterBarHolder.GetComponentsInChildren(typeof(WaterBar))[0].gameObject;
+        
+
         position = babyRoot.transform;
     }
 
     void Update()
     {
-        
-
-        if (Input.GetKeyDown(KeyCode.D))
+        // if (currentHealth > 0)
+        // {
+            if (Input.GetKeyDown(KeyCode.D))
         {
+            //check if rock is there and don't move if so
+
+
+
+            WaterBar.moveWaterRight();
+            distanceRight++;
             MoveRight();
+            
+            
         }
 
         else if (Input.GetKeyDown(KeyCode.A))
         {
+            //check if rock is there and don't move if so
+
+
+
+
+            WaterBar.moveWaterLeft();
+            distanceLeft++;
             MoveLeft();
         }
 
         else if (Input.GetKeyDown(KeyCode.S))
         {
+            //check if rock is there and don't move if so
+
+
+
+            depth++;
+
+        //need to change water bar reference to use actual script attatched to the canvas and it's methods
+        //right now it is just calling the script that exists in the folder I think
+        //WaterBar.takeDamage();
+            if (depth >= 20)
+            {
+                //WaterBar.takeDamage();
+                if (depth >= 40)
+                {
+                    //WaterBar.takeDamage();
+                }
+            }
+            
             MoveDown();
+            WaterBar.moveWaterDown();
         }
+        //}
+
+        
     }
     
 
