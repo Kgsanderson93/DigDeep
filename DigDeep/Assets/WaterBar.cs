@@ -14,7 +14,7 @@ public class WaterBar : MonoBehaviour
     private GameObject[] rainDropsArray, emptyRainDropsArray;
     private int currentHealth;
     private int currentHealthCap = 6;
-    [SerializeField] private Vector3 startingPosition;
+    [SerializeField] private Vector2 startingPosition;
     [SerializeField] private float dropUIspacingInX, dropUIspacingInY;
 
     // Start is called before the first frame update
@@ -26,7 +26,7 @@ public class WaterBar : MonoBehaviour
         imageComponents = new Image[totalHealth + 1];
         for (int i = 0; i < totalHealth; i++)
         {
-            
+            Debug.Log("drip");
             var newEmptyDrop = Instantiate(emptyDrop, placementPosition(totalHealth, i), Quaternion.identity);
             newEmptyDrop.transform.SetParent(canvasReference.transform, false);
             var newDrop = Instantiate(fullDrop, placementPosition(totalHealth, i), Quaternion.identity);
@@ -72,11 +72,15 @@ public class WaterBar : MonoBehaviour
         {
             decreaseMax();
         }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            moveWaterDown();
+        }
         
     }
 
     //private helper method to determine placement of new droplet
-    private Vector3 placementPosition(int totalHealth, int currentHealth)
+    private Vector2 placementPosition(int totalHealth, int currentHealth)
     {
 
         //we're going to start at level zero for simplicity sake
@@ -84,7 +88,7 @@ public class WaterBar : MonoBehaviour
         int xlevel = currentHealth;
         
 
-        Vector3 newPosition = startingPosition + new Vector3(dropUIspacingInX * currentHealth, 0, 0);
+        Vector2 newPosition = startingPosition + new Vector2(dropUIspacingInX * currentHealth, 0);
         
 
         return newPosition;
@@ -217,6 +221,19 @@ public class WaterBar : MonoBehaviour
         
         
         
+    }
+
+//this method will be called in player movement when going down not into obstacle
+    public void moveWaterDown()
+    {
+        for (int i = 0; i < totalHealth; i++)
+        {
+            //access both arrays and transform the raindrops down
+            rainDropsArray[i].transform.position = rainDropsArray[i].transform.position + new Vector3(0, -1, 0);
+            emptyRainDropsArray[i].transform.position = emptyRainDropsArray[i].transform.position + new Vector3(0, -1, 0);
+
+
+        }
     }
 
 
