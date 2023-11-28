@@ -21,7 +21,8 @@ public class rootMechanics : MonoBehaviour
     {
        
         spriteRendererForRoot = gameObject.GetComponent<SpriteRenderer>();
-        waterMethods =  waterBarHolder.GetComponentsInChildren(typeof(WaterBar))[0].gameObject;
+        waterMethods =  gameObject.GetComponent<WaterBar>().gameObject;
+        //waterMethods =  waterBarHolder.GetComponentsInChildren(typeof(WaterBar))[0].gameObject;
         
 
         position = babyRoot.transform;
